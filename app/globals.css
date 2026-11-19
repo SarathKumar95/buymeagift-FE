@@ -33,11 +33,14 @@ h1 { font-family:'Playfair Display',serif; font-size:clamp(48px,7vw,78px); line-
 .field { display:grid; gap:8px; margin:18px 0; }
 .field label { font-size:13px; font-weight:700; }
 input,textarea { width:100%; border:1px solid var(--line); background:white; border-radius:10px; padding:13px 14px; color:var(--ink); }
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible { outline:3px solid #e96f4c66; outline-offset:2px; }
 textarea { min-height:88px; resize:vertical; }
 .choices { display:flex; flex-wrap:wrap; gap:9px; }
 .choice { border:1px solid var(--line); background:white; border-radius:999px; padding:10px 14px; color:var(--ink); }
 .choice.active { background:#fae6df; border-color:var(--accent); color:#a7442c; }
 .submit { width:100%; background:var(--accent); color:white; border:0; padding:16px; border-radius:12px; font-weight:700; margin-top:12px; }
+.verification-result { max-width:560px; text-align:center; }
+.verification-action { display:block; }
 .notice { padding:14px; background:#f3eee6; border-radius:12px; line-height:1.5; font-size:14px; margin-top:16px; }
 .footer { border-top:1px solid var(--line); padding:28px 0 42px; color:var(--muted); font-size:13px; }
 @media(max-width:760px){ .hero{grid-template-columns:1fr;gap:28px;padding:48px 0}.hero-art{min-height:280px}.steps{grid-template-columns:1fr}h1{font-size:54px}.order{padding:20px;margin:28px 0 56px} }

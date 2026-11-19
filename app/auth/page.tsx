@@ -26,12 +26,16 @@ export default function AuthPage() {
   const [phone,setPhone]=useState(""); const [password,setPassword]=useState("");
   const [error,setError]=useState(""); const [busy,setBusy]=useState(false);
   const [confirmationEmail,setConfirmationEmail]=useState("");
+  const [confirmationComplete,setConfirmationComplete]=useState(false);
+  const [confirmationNotice,setConfirmationNotice]=useState("");
   const router=useRouter();
   async function resendVerification(){
-    setBusy(true); setError("");
+    setBusy(true); setError(""); setConfirmationNotice("");
     try {
       const r=await fetch(`${API}/api/auth/resend-verification`,{method:"POST",credentials:"include"});
       const d=await r.json(); if(!r.ok) throw new Error(apiErrorMessage(d.detail,"Could not resend confirmation email"));
+      if(d.message === "Your email is already confirmed") { setConfirmationComplete(true); return; }
+      setConfirmationNotice(d.message || "Confirmation email sent. Check your inbox.");
     } catch(err) { setError(err instanceof Error?err.message:"Something went wrong"); }
     finally { setBusy(false); }
   }
@@ -49,7 +53,7 @@ export default function AuthPage() {
     } catch(err) { setError(err instanceof Error?err.message:"Something went wrong"); }
     finally {setBusy(false);}
   }
-  if(confirmationEmail) return <main className="shell"><nav className="nav"><a className="logo" href="/">buy me a <span>random</span> gift.</a></nav><section className="order"><div className="eyebrow">One last step</div><h2>Check your inbox</h2><p className="muted">We sent a confirmation link to <b>{confirmationEmail}</b>. Open it to verify your account and continue to your dashboard.</p><button className="submit" onClick={resendVerification} disabled={busy}>{busy?"Sending...":"Resend confirmation email"}</button>{error&&<div className="notice" role="alert">{error}</div>}</section></main>;
+  if(confirmationEmail) return <main className="shell"><nav className="nav"><a className="logo" href="/">buy me a <span>random</span> gift.</a></nav><section className="order"><div className="eyebrow">{confirmationComplete?"Email confirmed":"One last step"}</div><h2>{confirmationComplete?"You're all set.":"Check your inbox"}</h2>{confirmationComplete?<><p className="muted">Your email is confirmed. You can now continue to your account.</p><a className="submit verification-action" href="/dashboard">Continue to my account</a></>:<><p className="muted">We sent a confirmation link to <b>{confirmationEmail}</b>. Open it to verify your account and continue to your dashboard.</p><button className="submit" onClick={resendVerification} disabled={busy}>{busy?"Sending...":"Resend confirmation email"}</button>{confirmationNotice&&<div className="notice" role="status">{confirmationNotice}</div>}{error&&<div className="notice" role="alert">{error}</div>}</>}</section></main>;
   return <main className="shell">
     <nav className="nav"><a className="logo" href="/">buy me a <span>random</span> gift.</a><a className="pill" href="/">← Home</a></nav>
     <section className="order">
